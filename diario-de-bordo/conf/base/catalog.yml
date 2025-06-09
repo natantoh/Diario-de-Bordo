@@ -1,0 +1,36 @@
+# Here you can define all your data sets by using simple YAML syntax.
+#
+# Documentation for this file format can be found in "The Data Catalog"
+# Link: https://docs.kedro.org/en/stable/data/data_catalog.html
+
+companies:
+  filepath: data/raw/companies.csv
+  type: spark.SparkDataset
+  file_format: csv
+  load_args:
+    header: True
+    inferSchema: True
+  save_args:
+    sep: ','
+    header: True
+    mode: overwrite
+
+# preprocessed_companies:
+#   filepath: data/processed/preprocessed_companies.csv
+#   type: spark.SparkDataset
+#   file_format: csv
+#   load_args:
+#     header: True
+#     inferSchema: True
+#   save_args:
+#     sep: ','
+#     header: True
+#     mode: overwrite
+
+# Para salvar no formato Delta Lake:
+preprocessed_companies:
+  filepath: data/processed/preprocessed_companies_delta
+  type: spark.SparkDataset
+  file_format: delta           # Define o formato Delta Lake
+  save_args:
+    mode: overwrite            # Sobrescreve se já existir
