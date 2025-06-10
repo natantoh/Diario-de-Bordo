@@ -68,4 +68,35 @@ python3.11 script.py
 
 📝 Inclui documentação e ambiente com Spark + Python corretos
 
-Se quiser adicionar suporte a Jupyter ou montar um ambiente Docker Compose com master/worker, posso te ajudar também
+## 🛠 7. **Comando para rodar o docker após o build da imagem**
+
+O projeto está salvando no caminho data, por isso, ao terminar de rodar via docker, perde-se os dados.  Para rodar o docker continuar com o dado, podemos usar os comandos abaixo:
+
+Ao usar o parâmetro `-v` no `docker run`, você **mapeia a pasta de dados do container para o seu host**, garantindo que tudo que for salvo em processed dentro do container ficará disponível (e persistente) na sua máquina, mesmo após o container ser removido.
+
+---
+
+## Como fazer no Windows
+
+Se estiver usando **PowerShell**:
+```sh
+docker run --rm -v ${PWD}/diario-de-bordo/data:/app/diario-de-bordo/data diario-de-bordo
+```
+
+Se estiver usando **CMD**:
+```cmd
+docker run --rm -v %cd%\diario-de-bordo\data:/app/diario-de-bordo/data diario-de-bordo
+```
+
+Se estiver usando **Git Bash**:
+```sh
+docker run --rm -v "$(pwd)/diario-de-bordo/data:/app/diario-de-bordo/data" diario-de-bordo
+```
+
+---
+
+## O que acontece?
+
+- O Kedro salva a tabela Delta em `/app/diario-de-bordo/data/processed` (dentro do container).
+- Com o volume, tudo que for salvo ali aparece em processed na sua máquina.
+- Você pode abrir, ler, copiar ou versionar a tabela Delta normalmente após o pipeline rodar.
