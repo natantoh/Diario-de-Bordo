@@ -3,34 +3,25 @@
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://docs.kedro.org/en/stable/data/data_catalog.html
 
-companies:
-  filepath: data/raw/companies.csv
+
+input_info_transportes:
+  filepath: data/raw/info_transportes.csv
   type: spark.SparkDataset
   file_format: csv
   load_args:
     header: True
     inferSchema: True
+    encoding: latin1
+    delimiter: ';'
   save_args:
-    sep: ','
+    delimiter: ';'
     header: True
     mode: overwrite
 
-# preprocessed_companies:
-#   filepath: data/processed/preprocessed_companies.csv
-#   type: spark.SparkDataset
-#   file_format: csv
-#   load_args:
-#     header: True
-#     inferSchema: True
-#   save_args:
-#     sep: ','
-#     header: True
-#     mode: overwrite
-
 # Para salvar no formato Delta Lake:
-preprocessed_companies:
-  filepath: data/processed/preprocessed_companies_delta
+output_info_corridas_do_dia:
+  filepath: data/processed/info_corridas_do_dia
   type: spark.SparkDataset
-  file_format: delta           # Define o formato Delta Lake
+  file_format: delta
   save_args:
-    mode: overwrite            # Sobrescreve se já existir
+    mode: overwrite

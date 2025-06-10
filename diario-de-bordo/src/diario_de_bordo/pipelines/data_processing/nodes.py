@@ -3,41 +3,59 @@
 #### AQUI TEM TODAS AS FUNÇÕES PYTHON ( NODES )
 #######
 
-import pandas as pd
-from pyspark.sql import Column
 from pyspark.sql import DataFrame as SparkDataFrame
-from pyspark.sql.functions import regexp_replace
-from pyspark.sql.types import DoubleType
+from pyspark.sql import functions as f
+from pyspark.sql import SparkSession
+from pyspark.sql.types import DoubleType, LongType
 
-def _is_true(x: Column) -> Column:
-    return x == "t"
+def processar_info_corridas_do_dia(df: SparkDataFrame) -> SparkDataFrame:
 
-def _parse_percentage(x: Column) -> Column:
-    x = regexp_replace(x, "%", "")
-    x = x.cast("float") / 100
-    return x
-
-def preprocess_companies(companies: SparkDataFrame) -> tuple[SparkDataFrame, dict]:
-    """Preprocesses the data for companies.
-
-    Args:
-        companies: Raw data.
-    Returns:
-        Preprocessed data, with `company_rating` converted to a float and
-        `iata_approved` converted to boolean.
+    """
+    Lê o arquivo info_transportes.csv, processa e salva uma tabela Delta agrupada por dia.
     """
 
+    df.show()
+    df.printSchema()
 
-    import pyspark
-    print(pyspark.__version__)
+    df = df.select(
 
-    from pyspark.sql import SparkSession
-    spark = SparkSession.builder.getOrCreate()
-    print(f"versão do spark: {spark.version}")
+        f.date_format( f.to_timestamp("DATA_INICIO", "dd-MM-yyyy HH:mm"), "yyyy-MM-dd").alias("DT_REFE"),
+        f.col("DISTANCIA").cast(DoubleType()).alias("DISTANCIA"),
+        f.when( 
+                f.col("CATEGORIA") == "Negocio", 1 
+            ).otherwise(0).alias("IN_NEGOCIO"),
 
-    companies = companies.withColumn("iata_approved", _is_true(companies.iata_approved))
-    companies = companies.withColumn("company_rating", _parse_percentage(companies.company_rating))
+        f.when(f.col("CATEGORIA") == "Pessoal", 1
+            ).otherwise(0).alias("IN_PESSOAL"),
 
-    # Drop columns that aren't used for model training
-    companies = companies.drop('company_location', 'total_fleet_count')
-    return companies
+        f.when(
+                f.col("PROPOSITO") == "Reunião", 1
+            ).otherwise(0).alias("IN_REUNIAO"),
+
+        f.when( ( f.col("PROPOSITO").isNotNull() ) 
+                    & (f.col("PROPOSITO") != "Reunião"), 1  
+                ).otherwise(0).alias("IN_NAO_REUNIAO"),
+    )
+
+    df.show()
+    df.printSchema()
+
+    # Agregações
+    result = (
+        df.groupBy("DT_REFE")
+        .agg(
+            f.count("*").cast(LongType()).alias("QT_CORR"),
+            f.sum("IN_NEGOCIO").cast(LongType()).alias("QT_CORR_NEG"),
+            f.sum("IN_PESSOAL").cast(LongType()).alias("QT_CORR_PESS"),
+            f.max("DISTANCIA").alias("VL_MAX_DIST"),
+            f.min("DISTANCIA").alias("VL_MIN_DIST"),
+            f.round( f.avg("DISTANCIA"), 2).alias("VL_AVG_DIST"),
+            f.sum("IN_REUNIAO").cast(LongType()).alias("QT_CORR_REUNI"),
+            f.sum("IN_NAO_REUNIAO").cast(LongType()).alias("QT_CORR_NAO_REUNI"),
+        )
+    )
+
+    result.show()
+    result.printSchema()
+
+    return result
