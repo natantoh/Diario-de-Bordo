@@ -103,4 +103,23 @@ docker run --rm -v "$(pwd)/diario-de-bordo/data:/app/diario-de-bordo/data" diari
 
 
 ## Rodando sem docker
-$env:PYSPARK_SUBMIT_ARGS="--packages io.delta:delta-core_2.12:2.4.0 --conf spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog pyspark-shell"
+Nesta sessão, será apresentado o passo a passo para rodar sem docker:
+
+
+1. Rodar o comando abaixo:
+
+   **Para Windows (PowerShell):**
+   ```powershell
+   $env:PYSPARK_SUBMIT_ARGS="--packages io.delta:delta-core_2.12:2.4.0 --conf spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog pyspark-shell"
+   ```
+
+   **Para Bash (Linux/macOS):**
+   ```bash
+   export PYSPARK_SUBMIT_ARGS="--packages io.delta:delta-core_2.12:2.4.0 --conf spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog pyspark-shell"
+   ```
+
+2. Rodar o comando abaixo (igual em todos os sistemas), o comando abaixo é executado na mesma pasta em que está o pyproject.toml:
+
+   ```bash
+   python -m kedro run
+   ```
