@@ -4,7 +4,7 @@
 
 Este projeto fornece um contêiner Docker com:
 
-- Spark 3.4.4 (Hadoop 3, Scala 2.13)
+- Spark 3.4.4 (Hadoop 3, Scala 2.12)
 - Python 3.11
 - PySpark 3.4.4
 - (Opcional) Delta Lake
@@ -100,3 +100,7 @@ docker run --rm -v "$(pwd)/diario-de-bordo/data:/app/diario-de-bordo/data" diari
 - O Kedro salva a tabela Delta em `/app/diario-de-bordo/data/processed` (dentro do container).
 - Com o volume, tudo que for salvo ali aparece em processed na sua máquina.
 - Você pode abrir, ler, copiar ou versionar a tabela Delta normalmente após o pipeline rodar.
+
+
+## Rodando sem docker
+$env:PYSPARK_SUBMIT_ARGS="--packages io.delta:delta-core_2.12:2.4.0 --conf spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog pyspark-shell"
