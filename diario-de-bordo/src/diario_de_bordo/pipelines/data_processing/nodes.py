@@ -11,7 +11,7 @@ from pyspark.sql.types import DoubleType, LongType
 def processar_info_corridas_do_dia(df: SparkDataFrame) -> SparkDataFrame:
 
     """
-    Lê o arquivo info_transportes.csv, processa e salva uma tabela Delta agrupada por dia.
+    Recebe um dataframe, processa e salva uma tabela Delta agrupada por dia, a tabela final é particionada por DT_REFE.
     """
 
     df.show()
