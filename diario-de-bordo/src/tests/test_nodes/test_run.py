@@ -12,7 +12,7 @@ def spark():
         .getOrCreate()
 
 
-@pytest.mark.unit
+@pytest.mark.unit # Adicionado no pytest.ini para registro. Marca o teste como unitário, útil para categorizar testes.
 def test_processar_info_corridas_do_dia(spark):
 
     input_df = mock_df_para_processar_info_corridas_do_dia(spark)
