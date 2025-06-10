@@ -168,7 +168,7 @@ No estado atual do projeto, não utilizamos o `pytest-ordering` pois não há ne
 
 ### 2. Gerando Relatórios
 
-#### 2.1 Relatório no Terminal (básico)
+#### 2.1 Relatório no Terminal
 Execute na raiz do projeto (onde está a pasta `src/`):
 
 ```powershell
