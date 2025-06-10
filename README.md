@@ -102,10 +102,54 @@ docker run --rm -v "$(pwd)/diario-de-bordo/data:/app/diario-de-bordo/data" diari
 - Você pode abrir, ler, copiar ou versionar a tabela Delta normalmente após o pipeline rodar.
 
 
-## Rodando sem docker
-Nesta sessão, será apresentado o passo a passo para rodar sem docker:
+## Rodando sem Docker - Configuração manual no Windows
 
+Nesta sessão, será apresentado o passo a passo para rodar sem Docker, documentando os passos feitos para rodar manualmente no Windows:
 
+### Pré-requisitos:
+- [x] Download do Spark 3.4.4 com Scala 2.12: [Apache Spark Downloads](https://spark.apache.org/downloads.html)
+- [x] Download do Python 3.11.9: [Python Downloads](https://www.python.org/downloads/windows/)
+- [x] Download do Hadoop 3.3.5/bin (Windows): [WinUtils](https://github.com/cdarlint/winutils)
+- [x] Download do Java JDK 17 (17.0.12): [Oracle JDK](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+
+### Configuração das Variáveis de Ambiente
+
+Os valores dependem do local de instalação. No meu caso:
+
+| Variável        | Valor                              |
+|-----------------|------------------------------------|
+| `HADOOP_HOME`   | `C:\hadoop-3.3.5`                  |
+| `JAVA_HOME`     | `C:\Program Files\Java\jdk-17`     |
+| `PYSPARK_PYTHON`| `C:\Program Files\Python311\python.exe` |
+| `PYTHON_HOME`   | `C:\Program Files\Python311`       |
+| `SPARK_HOME`    | `C:\spark-3.4.4-bin-hadoop3`      |
+
+### Configuração do PATH (adicionar):
+```
+C:\Program Files\Python311\Scripts\
+C:\Program Files\Python311\
+%JAVA_HOME%\bin
+%HADOOP_HOME%\bin
+%SPARK_HOME%\bin
+%USERPROFILE%\AppData\Roaming\Python\Python311\Scripts
+C:\Users\natan\AppData\Roaming\Python\Python311\Scripts
+```
+
+### Instalação dos Requirements
+
+Navegue até a pasta contendo `requirements.txt` e execute:
+
+```powershell
+pip install -r requirements.txt
+```
+
+### Verificação da Instalação
+
+Para confirmar que tudo está configurado corretamente:
+
+```powershell
+python -c "import pyspark; print(pyspark.__version__)"
+```
 1. Rodar o comando abaixo:
 
    **Para Windows (PowerShell):**
