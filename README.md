@@ -105,3 +105,54 @@ python -c "import pyspark; print(pyspark.__version__)"
    ```bash
    python -m kedro run
    ```
+
+## TESTES
+
+Utilizamos os seguintes requirements para testes:
+
+```python
+pytest==7.4.4
+pytest-cov==4.1.0
+pytest-ordering==0.6
+```
+
+Onde:
+- `pytest` - Roda os testes
+- `pytest-cov` - Mede a cobertura de código
+- `pytest-ordering` - Controla a ordem dos testes
+
+### Ferramentas Utilizadas
+
+#### **Pytest**
+- Framework de testes para Python
+- Permite escrever, organizar e rodar testes automatizados de forma simples e poderosa
+- Comando principal:
+  ```bash
+  pytest
+  ```
+
+#### **pytest-cov**
+- Plugin do pytest para medir a cobertura de código
+- Mostra quais linhas do código foram executadas durante os testes
+- Gera relatórios de cobertura no terminal ou em HTML
+- Exemplo de uso:
+  ```bash
+  pytest --cov=src/
+  ```
+
+#### **pytest-ordering**
+- Plugin para controlar a ordem de execução dos testes
+- Permite definir ordem de execução com decorators
+- Exemplo de uso:
+  ```python
+  @pytest.mark.run(order=1)
+  def test_primeiro():
+      ...
+  ```
+
+### Observação
+No estado atual do projeto, não utilizamos o `pytest-ordering` pois não há necessidade de executar testes em sequência específica, mas mantemos nos requirements para completar o conjunto básico de ferramentas de teste.
+
+
+
+
