@@ -19,10 +19,6 @@ Após instalação do docker, executa-se o seguinte comando, o comando deve ser 
 ```sh
 docker run --rm -v ${PWD}/diario-de-bordo/data:/app/diario-de-bordo/data diario-de-bordo
 ```
-**CMD**:
-```cmd
-docker run --rm -v %cd%\diario-de-bordo\data:/app/diario-de-bordo/data diario-de-bordo
-```
 **Git Bash**:
 ```sh
 docker run --rm -v "$(pwd)/diario-de-bordo/data:/app/diario-de-bordo/data" diario-de-bordo
@@ -160,4 +156,84 @@ No estado atual do projeto, não utilizamos o `pytest-ordering` pois não há ne
 - Uso de fixtures para setup complexo
 - Relatórios de cobertura obrigatórios no CI/CD
 
+## RELATÓRIOS DE COBERTURA DE TESTES
 
+- Percentual de código testado
+- Linhas executadas e não executadas
+- Arquivos com baixa cobertura
+
+### 2. Gerando Relatórios
+
+#### 2.1 Relatório no Terminal
+Execute na raiz do projeto (onde está a pasta `src/`):
+
+```powershell
+pytest --cov=src --cov-report=term-missing
+```
+
+**Saída gerada do projeto:**
+```
+---------- coverage: platform win32, python 3.11.9-final-0 -----------
+Name                                                        Stmts   Miss  Cover   Missing
+-----------------------------------------------------------------------------------------
+src\diario_de_bordo\__init__.py                                 1      0   100%
+src\diario_de_bordo\__main__.py                                14     14     0%   4-23
+src\diario_de_bordo\hooks.py                                   11     11     0%   1-24
+src\diario_de_bordo\pipeline_registry.py                        6      6     0%   5-17
+src\diario_de_bordo\pipelines\__init__.py                       0      0   100%
+src\diario_de_bordo\pipelines\data_processing\__init__.py       1      0   100%
+src\diario_de_bordo\pipelines\data_processing\nodes.py         14      0   100%
+src\diario_de_bordo\pipelines\data_processing\pipeline.py       4      1    75%   9
+src\diario_de_bordo\settings.py                                10     10     0%   31-55
+src\tests\test_nodes.py                                        15      0   100%
+src\tests\test_run.py                                          15      5    67%   18-27
+-----------------------------------------------------------------------------------------
+TOTAL                                                          91     47    48%
+```
+
+Como mostra a imagem acima, o projeto está com Cover acima de 80%.
+
+#### 2.2 Relatório HTML (visual)
+Para uma análise detalhada ( irá criar uma pasta htmlcov/ e podemos abrir o arquivo htmlcov/index.html para analise ).
+
+```bash
+pytest --cov=src --cov-report=html
+```
+- Código colorido (verde=testado, vermelho=não testado)
+- Gráficos de cobertura por módulo
+
+Neste projeto, preferimos executar o pytest como no item 2.1 Relatório no Terminal onde mostra a cobertura obtida.
+
+### 4. Configuração Avançada
+Adicione no `pyproject.toml` ou `setup.cfg`:
+```ini
+[tool.pytest.ini_options]
+addopts = --cov=src --cov-report=term-missing
+```
+
+### 5. Limpeza dos relatórios gerados
+```bash
+rm -rf .coverage htmlcov/
+```
+## EXECUTANDO O PYTEST
+Para rodar o pytest, pode-se seguir os seguintes passos:
+
+Na pasta raíz do projeto, onde está src:
+
+**PowerShell**
+```powershell
+$env:PYTHONPATH="src"
+pytest -vv src/tests/test_run.py
+```
+
+**Git Bash**:
+```bash
+PYTHONPATH=src pytest -vv src/tests/test_run.py
+```
+No código acima, o parâmetro `-vv` (ou `--verbose --verbose`) após o comando `pytest` serve para deixar a saída **mais detalhada**.
+
+- `pytest` mostra apenas o básico (pass/fail).
+- `pytest -v` mostra o nome de cada teste.
+- `pytest -vv` mostra ainda mais detalhes, como parâmetros de testes parametrizados, docstrings dos testes, e mensagens de assert.
+
+Por isso foi usado pytest -vv para obter uma saída melhor detalhada dos testes.
