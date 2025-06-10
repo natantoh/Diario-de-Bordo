@@ -11,8 +11,7 @@ ENV JAVA_HOME=/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64
 ENV PYSPARK_PYTHON=python${PYTHON_VERSION}
 ENV PATH=$PATH:$SPARK_HOME/bin:$HADOOP_HOME/bin:$JAVA_HOME/bin
 
-### LINHA MALDITA, SE NÃO TIVER DA ERRO DE SALVAR A TABELA DELTA
-# Adicione a variável de ambiente PYSPARK_SUBMIT_ARGS para Delta Lake
+# Delta Lake configs
 ENV PYSPARK_SUBMIT_ARGS="--packages io.delta:delta-core_2.12:2.4.0 --conf spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog pyspark-shell"
 
 RUN apt-get update && apt-get install -y \
@@ -25,12 +24,15 @@ RUN wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SP
     mv /opt/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} $SPARK_HOME && \
     rm spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
 
-# instalações Python
-COPY requirements.txt /tmp/
+# Instalar dependências Python
+COPY diario-de-bordo/requirements.txt /tmp/
 RUN python${PYTHON_VERSION} -m pip install --upgrade pip && \
     python${PYTHON_VERSION} -m pip install -r /tmp/requirements.txt
 
-WORKDIR /app
-COPY script.py /app/
+# Copiar todo o projeto para dentro do container
+COPY diario-de-bordo /app/diario-de-bordo
 
-CMD ["python3.11", "script.py"]
+WORKDIR /app/diario-de-bordo
+
+# Rodar o pipeline Kedro
+CMD ["kedro", "run"]
