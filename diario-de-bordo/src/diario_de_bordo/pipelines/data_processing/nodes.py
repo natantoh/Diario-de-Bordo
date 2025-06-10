@@ -20,7 +20,7 @@ def processar_info_corridas_do_dia(df: SparkDataFrame) -> SparkDataFrame:
     df = ( df.distinct()
             .select(
 
-                f.date_format( f.to_timestamp("DATA_INICIO", "dd-MM-yyyy HH:mm"), "yyyy-MM-dd").alias("DT_REFE"),
+                f.date_format(f.to_timestamp("DATA_INICIO", "MM-dd-yyyy HH:mm"), "yyyy-MM-dd").alias("DT_REFE"),
                 f.col("DISTANCIA").cast(DoubleType()).alias("DISTANCIA"),
                 f.when( 
                         f.col("CATEGORIA") == "Negocio", 1 
