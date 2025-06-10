@@ -248,4 +248,6 @@ Código para checar o tipo de encoding:
 Get-Content -Path .\data\raw\info_transportes.csv -Encoding Byte -TotalCount 4 | Format-Hex
 ```
 Resultado do comando: 00000000   EF BB BF 44   ï»¿D
-significa que arquivo info_transportes.csv está codificado em UTF-8 com BOM (Byte Order Mark). 
+significa que arquivo info_transportes.csv está codificado em UTF-8 com BOM (Byte Order Mark).
+
+## TESTE DE OVERWRITE
