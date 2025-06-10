@@ -150,6 +150,8 @@ Para confirmar que tudo está configurado corretamente:
 ```powershell
 python -c "import pyspark; print(pyspark.__version__)"
 ```
+
+### Rodar o projeto localmente
 1. Rodar o comando abaixo:
 
    **Para Windows (PowerShell):**
