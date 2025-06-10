@@ -19,10 +19,6 @@ Após instalação do docker, executa-se o seguinte comando, o comando deve ser 
 ```sh
 docker run --rm -v ${PWD}/diario-de-bordo/data:/app/diario-de-bordo/data diario-de-bordo
 ```
-**CMD**:
-```cmd
-docker run --rm -v %cd%\diario-de-bordo\data:/app/diario-de-bordo/data diario-de-bordo
-```
 **Git Bash**:
 ```sh
 docker run --rm -v "$(pwd)/diario-de-bordo/data:/app/diario-de-bordo/data" diario-de-bordo
@@ -218,4 +214,19 @@ addopts = --cov=src --cov-report=term-missing
 ### 5. Limpeza dos relatórios gerados
 ```bash
 rm -rf .coverage htmlcov/
+```
+## EXECUTANDO O PYTEST
+Para rodar o pytest, pode-se seguir os seguintes passos:
+
+Na pasta raíz do projeto, onde está src:
+
+**PowerShell**
+```powershell
+$env:PYTHONPATH="src"
+pytest src/tests/test_run.py
+```
+
+**Git Bash**:
+```bash
+PYTHONPATH=src pytest src/tests/test_run.py
 ```
