@@ -106,14 +106,15 @@ python -c "import pyspark; print(pyspark.__version__)"
    python -m kedro run
    ```
 
-## TESTES
+## ESTRATÉGIA DE TESTES
+Neste projeto, adotamos o **pytest** como framework principal para testes em Python, complementado por plugins essenciais para garantia de qualidade.
 
 Utilizamos os seguintes requirements para testes:
 
 ```python
-pytest==7.4.4
-pytest-cov==4.1.0
-pytest-ordering==0.6
+pytest==7.4.4           # Framework base
+pytest-cov==4.1.0       # Análise de cobertura
+pytest-ordering==0.6    # Controle de ordem (não utilizado atualmente)
 ```
 
 Onde:
@@ -151,8 +152,12 @@ Onde:
   ```
 
 ### Observação
-No estado atual do projeto, não utilizamos o `pytest-ordering` pois não há necessidade de executar testes em sequência específica, mas mantemos nos requirements para completar o conjunto básico de ferramentas de teste.
+No estado atual do projeto, não utilizamos o `pytest-ordering` pois não há necessidade de executar testes em sequência específica, mas mantemos nos requirements para completar o conjunto básico de ferramentas de teste, e para eventual necessidade futura.
 
-
+### Boas Práticas Adotadas
+- Testes isolados e idempotentes
+- Nomes descritivos (prefixo `test_`)
+- Uso de fixtures para setup complexo
+- Relatórios de cobertura obrigatórios no CI/CD
 
 
