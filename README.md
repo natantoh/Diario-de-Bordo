@@ -223,10 +223,17 @@ Na pasta raíz do projeto, onde está src:
 **PowerShell**
 ```powershell
 $env:PYTHONPATH="src"
-pytest src/tests/test_run.py
+pytest -vv src/tests/test_run.py
 ```
 
 **Git Bash**:
 ```bash
-PYTHONPATH=src pytest src/tests/test_run.py
+PYTHONPATH=src pytest -vv src/tests/test_run.py
 ```
+No código acima, o parâmetro `-vv` (ou `--verbose --verbose`) após o comando `pytest` serve para deixar a saída **mais detalhada**.
+
+- `pytest` mostra apenas o básico (pass/fail).
+- `pytest -v` mostra o nome de cada teste.
+- `pytest -vv` mostra ainda mais detalhes, como parâmetros de testes parametrizados, docstrings dos testes, e mensagens de assert.
+
+Por isso foi usado pytest -vv para obter uma saída melhor detalhada dos testes.
