@@ -1,9 +1,9 @@
-from pyspark.sql import DataFrame as SparkDataFrame
+from pyspark.sql import DataFrame
 from pyspark.sql import functions as f
 from pyspark.sql import SparkSession
 from pyspark.sql.types import DoubleType, LongType
 
-def processar_info_corridas_do_dia(df: SparkDataFrame) -> SparkDataFrame:
+def processar_info_corridas_do_dia(df: DataFrame) -> DataFrame:
 
     """
     Recebe um dataframe, processa e salva uma tabela Delta agrupada por dia, a tabela final é particionada por DT_REFE.
@@ -56,3 +56,19 @@ def processar_info_corridas_do_dia(df: SparkDataFrame) -> SparkDataFrame:
     )
 
     return result
+
+def visualizar_info_corridas(delta_path: str) -> None:
+    """
+    Node de visualização que exibe o conteúdo da tabela Delta processada.
+    Não retorna nada, apenas mostra os dados.
+    """
+    spark = SparkSession.getActiveSession()
+
+    df = spark.read.format("delta").load(delta_path)
+
+    print("="*80) # Imprime o caractere "=" 80 vezes
+    print("Visualização da Tabela de Corridas Diárias")
+    print("="*80)
+    df.printSchema()
+    df.show(truncate=False)
+    print(f"\nTotal de dias registrados: {df.count()}")
