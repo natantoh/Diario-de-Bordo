@@ -1,12 +1,49 @@
 # Diario-de-Bordo
 
-# Requirements
+# Strutura do Projeto
 
-- Spark 3.4.4 (Hadoop 3, Scala 2.12)
-- Python 3.11
-- PySpark 3.4.4
-- Delta Lake
-- Docker
+O projeto foi feito conforme a arquitetura abaixo, foi utilizado o template do kedro 0.19.12.
+
+```
+diario-de-bordo/
+├── conf/
+│   ├── base/
+│   │   ├── catalog.yml
+│   │   ├── parameters.yml
+│   │   ├── spark.yml
+│   │   └── ...
+│   ├── local/
+│   │   └── credentials.yml
+│   └── README.md
+├── data/
+│   ├── raw/
+│   │   └── info_transportes.csv
+│   └── processed/
+├── diario-de-bordo/
+│   └── data/
+├── src/
+│   ├── diario_de_bordo/
+│   │   ├── __init__.py
+│   │   ├── __main__.py
+│   │   ├── hooks.py
+│   │   ├── pipeline_registry.py
+│   │   ├── settings.py
+│   │   └── pipelines/
+│   │       └── data_processing/
+│   │           ├── __init__.py
+│   │           ├── nodes.py
+│   │           └── pipeline.py
+│   └── tests/
+│       ├── common_tests/
+│       ├── test_nodes/
+│       └── utils/
+│           └── moc_data.py
+├── requirements.txt
+├── pyproject.toml
+├── pytest.ini
+├── README.md
+└── Dockerfile
+```
 
 ---
 ## Gerando a imagem Docker
@@ -155,18 +192,11 @@ Onde:
 
 ### Observação
 No estado atual do projeto, não utilizamos o `pytest-ordering` pois não há necessidade de executar testes em sequência específica, mas mantemos nos requirements para completar o conjunto básico de ferramentas de teste, e para eventual necessidade futura.
-
-### Boas Práticas Adotadas
-- Testes isolados e idempotentes
-- Nomes descritivos (prefixo `test_`)
-- Uso de fixtures para setup complexo
-- Relatórios de cobertura obrigatórios no CI/CD
+Os nomes dos testes tem um prefixo padrão test_... indicando que é um teste.
 
 ## RELATÓRIOS DE COBERTURA DE TESTES
-
 - Percentual de código testado
 - Linhas executadas e não executadas
-- Arquivos com baixa cobertura
 
 ### 2. Gerando Relatórios
 
@@ -197,7 +227,7 @@ src\tests\test_run.py                                          15      5    67% 
 TOTAL                                                          91     47    48%
 ```
 
-Como mostra a imagem acima, o projeto está com Cover acima de 80%.
+Como mostra a imagem acima, o projeto está com Cover acima de 48%. Os arquivos de configuração do kedro ( hooks.py, settings.py, pipeline_registry.py  ) normalmente não possuem testes unitários.
 
 #### 2.2 Relatório HTML (visual)
 Para uma análise detalhada ( irá criar uma pasta htmlcov/ e podemos abrir o arquivo htmlcov/index.html para analise ).
