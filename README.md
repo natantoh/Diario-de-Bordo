@@ -9,6 +9,12 @@
 - Docker
 
 ---
+## Gerando a imagem Docker
+
+Na pasta onde encontra-se o DockerFile digitar o comando:
+```powershell
+docker build -t diario-de-bordo .
+```
 
 ## Execução com Docker
 Necessário ter o docker instalado para build e run da imagem.
