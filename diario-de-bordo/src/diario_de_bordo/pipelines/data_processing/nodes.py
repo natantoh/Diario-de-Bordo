@@ -20,7 +20,7 @@ def processar_info_corridas_do_dia(df: SparkDataFrame) -> SparkDataFrame:
         f.to_date("DATA_SEM_HORA", "M-d-yyyy") # Aceita um ou dois dígitos para mês e dia
     )
 
-    df = ( df.distinct()
+    df = ( df
           .select(
             "DT_REFE",
             f.col("DISTANCIA").cast(DoubleType()).alias("DISTANCIA"),
