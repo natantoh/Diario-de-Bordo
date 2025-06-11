@@ -24,4 +24,5 @@ output_info_corridas_do_dia:
   file_format: delta
   save_args:
     mode: overwrite
+    partitionOverwriteMode: dynamic
     partitionBy: ["DT_REFE"]
