@@ -1,9 +1,8 @@
-# Here you can define all your data sets by using simple YAML syntax.
-#
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://docs.kedro.org/en/stable/data/data_catalog.html
 
-
+# Atenção para o correto encoding dos arquivos CSV. Pois se estiver incorreto causa erros de caracteres
+# estranhos, como por exemplo: "��" ao invés de "í". Tentado anteriormente o encoding para "latin-1", mas o correto é "utf-8".
 input_info_transportes:
   filepath: data/raw/info_transportes.csv
   type: spark.SparkDataset
@@ -11,7 +10,7 @@ input_info_transportes:
   load_args:
     header: True
     inferSchema: True
-    encoding: latin1
+    encoding: utf-8
     delimiter: ';'
   save_args:
     delimiter: ';'
@@ -25,3 +24,5 @@ output_info_corridas_do_dia:
   file_format: delta
   save_args:
     mode: overwrite
+    partitionOverwriteMode: dynamic
+    partitionBy: ["DT_REFE"]

@@ -8,10 +8,10 @@ https://docs.kedro.org/en/stable/kedro_project_setup/settings.html."""
 #####
 
 # Instantiated project hooks.
-#from diario_de_bordo.hooks import SparkHooks  # noqa: E402
+from diario_de_bordo.hooks import SparkHooks  # noqa: E402
 
 # Hooks are executed in a Last-In-First-Out (LIFO) order.
-#HOOKS = (SparkHooks(),)
+HOOKS = (SparkHooks(),)
 
 # Installed plugins for which to disable hook auto-registration.
 # DISABLE_HOOKS_FOR_PLUGINS = ("kedro-viz",)
@@ -46,12 +46,14 @@ CONFIG_LOADER_ARGS = {
 class SparkHooks:
     @hook_impl
     def after_context_created(self, context):
-        spark = (
-            SparkSession.builder
-            .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-            .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-            .getOrCreate()
-        )
+        # spark = (
+        #     SparkSession.builder
+        #     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+        #     .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
+        #     .getOrCreate()
+        # )
+        # SparkSession vai herdar as configs do spark.yml automaticamente
+        spark = SparkSession.builder.getOrCreate()
         context.spark = spark
 
 # Class that manages Kedro's library components.

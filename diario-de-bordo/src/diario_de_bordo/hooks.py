@@ -1,7 +1,7 @@
 from kedro.framework.hooks import hook_impl
 from pyspark import SparkConf
 from pyspark.sql import SparkSession
-
+import pyspark.sql.session
 
 class SparkHooks:
     @hook_impl
@@ -22,3 +22,5 @@ class SparkHooks:
         )
         _spark_session = spark_session_conf.getOrCreate()
         _spark_session.sparkContext.setLogLevel("WARN")
+        context.spark = _spark_session  # Torna disponível via context (boa prática)
+        pyspark.sql.session._active_spark_session = _spark_session  # Garante sessão ativa globalmente
