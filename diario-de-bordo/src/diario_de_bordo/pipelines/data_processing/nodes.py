@@ -1,8 +1,3 @@
-
-########
-#### AQUI TEM TODAS AS FUNÇÕES PYTHON ( NODES )
-#######
-
 from pyspark.sql import DataFrame as SparkDataFrame
 from pyspark.sql import functions as f
 from pyspark.sql import SparkSession
@@ -13,40 +8,39 @@ def processar_info_corridas_do_dia(df: SparkDataFrame) -> SparkDataFrame:
     """
     Recebe um dataframe, processa e salva uma tabela Delta agrupada por dia, a tabela final é particionada por DT_REFE.
     """
+    
+    # Extrai apenas o trecho da data com regex (seguro contra variações sutis)
+    df = df.withColumn( 
+        "DATA_SEM_HORA",
+        f.regexp_extract("DATA_INICIO", r"(\d{1,2}-\d{1,2}-\d{4})", 1)
+    )
 
-    df.show()
-    df.printSchema()
+    df = df.withColumn(
+        "DT_REFE",
+        f.to_date("DATA_SEM_HORA", "M-d-yyyy") # Aceita um ou dois dígitos para mês e dia
+    )
 
     df = ( df.distinct()
-            .select(
-
-                f.date_format(f.to_timestamp("DATA_INICIO", "MM-dd-yyyy HH:mm"), "yyyy-MM-dd").alias("DT_REFE"),
-                f.col("DISTANCIA").cast(DoubleType()).alias("DISTANCIA"),
-                f.when( 
-                        f.col("CATEGORIA") == "Negocio", 1 
-                    ).otherwise(0).alias("IN_NEGOCIO"),
-
-                f.when(f.col("CATEGORIA") == "Pessoal", 1
+          .select(
+            "DT_REFE",
+            f.col("DISTANCIA").cast(DoubleType()).alias("DISTANCIA"),
+            f.when(
+                  f.trim(f.col("CATEGORIA")) == "Negocio", 1 
+                  ).otherwise(0).alias("IN_NEGOCIO"),
+            f.when(
+                    f.trim(f.col("CATEGORIA")) == "Pessoal", 1
                     ).otherwise(0).alias("IN_PESSOAL"),
-
-                f.when(
-                        f.col("PROPOSITO") == "Reunião", 1
+            f.when(
+                    f.trim(f.col("PROPOSITO")) == "Reunião", 1
                     ).otherwise(0).alias("IN_REUNIAO"),
-
-                f.when(
+            f.when(
                     (f.col("PROPOSITO").isNotNull()) &
                     (f.trim(f.col("PROPOSITO")) != "") &
-                    (f.col("PROPOSITO") != "Reunião"),
-                    1
-                ).otherwise(0).alias("IN_NAO_REUNIAO")
-
+                    (f.trim(f.col("PROPOSITO")) != "Reunião"), 1
+                    ).otherwise(0).alias("IN_NAO_REUNIAO")
+                 )
             )
-        )
 
-    df.show()
-    df.printSchema()
-
-    # Agregações
     result = (
         df.groupBy("DT_REFE")
         .agg(
@@ -60,8 +54,5 @@ def processar_info_corridas_do_dia(df: SparkDataFrame) -> SparkDataFrame:
             f.sum("IN_NAO_REUNIAO").cast(LongType()).alias("QT_CORR_NAO_REUNI"),
         )
     )
-
-    result.show()
-    result.printSchema()
 
     return result
