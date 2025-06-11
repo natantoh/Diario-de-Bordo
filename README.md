@@ -237,3 +237,17 @@ No código acima, o parâmetro `-vv` (ou `--verbose --verbose`) após o comando 
 - `pytest -vv` mostra ainda mais detalhes, como parâmetros de testes parametrizados, docstrings dos testes, e mensagens de assert.
 
 Por isso foi usado pytest -vv para obter uma saída melhor detalhada dos testes.
+
+
+## ENCODING DO CSV
+Foi necessário realizar a verificação do encoding do .csv para correto carregamento no spark.
+Ao utilizar um encoding diferente do correto, ocorre erros com caracteres estranhos, como: "ReuniÃ£o" em vez de "Reunião".
+
+Código para checar o tipo de encoding:
+```powershell
+Get-Content -Path .\data\raw\info_transportes.csv -Encoding Byte -TotalCount 4 | Format-Hex
+```
+Resultado do comando: 00000000   EF BB BF 44   ï»¿D
+significa que arquivo info_transportes.csv está codificado em UTF-8 com BOM (Byte Order Mark).
+
+## TESTE DE OVERWRITE
