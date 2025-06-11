@@ -251,3 +251,7 @@ Resultado do comando: 00000000   EF BB BF 44   ï»¿D
 significa que arquivo info_transportes.csv está codificado em UTF-8 com BOM (Byte Order Mark).
 
 ## TESTE DE OVERWRITE
+
+## SPARKSESSION
+Ao longo do desenvolvimento, foi feito múltiplas SparkSession em diferentes lugares, o que poderia causar inconsistências e desperdício de recursos, por isso, foi centralizado as configurações do spark no arquivo spark.yml, que usamos para criar a SparkSession apenas uma vez (no hook do Kedro ) e reutilizar essa sessão ao longo das execuções.
+Assim, nos nodes acessamos a SparkSession já criada via context.spark (injeção de contexto)  e em em scripts externos, cria-se uma função utilitária para obter a SparkSession com as configurações corretas.
