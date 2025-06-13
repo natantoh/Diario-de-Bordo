@@ -54,7 +54,7 @@ docker build -t diario-de-bordo .
 ```
 
 ## Execução com Docker
-Necessário ter o docker instalado para build e run da imagem.
+Necessário ter o docker instalado para build e run da imagem. No meu caso, instalei o docker desktop no windows, onde pode-se acompanhar containers e imagens.
 Após instalação do docker, executa-se o seguinte comando, o comando deve ser executado na mesma pasta que está o DockerFile:
 
 ---
