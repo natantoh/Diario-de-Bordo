@@ -144,7 +144,7 @@ python -c "import pyspark; print(pyspark.__version__)"
    python -m kedro run
    ```
 
-## ESTRATÉGIA DE TESTES
+## Estratégia de testes
 Neste projeto, adotamos o **pytest** como framework principal para testes em Python, complementado por plugins essenciais para garantia de qualidade.
 
 Utilizamos os seguintes requirements para testes:
@@ -193,7 +193,7 @@ Onde:
 No estado atual do projeto, não utilizamos o `pytest-ordering` pois não há necessidade de executar testes em sequência específica, mas mantemos nos requirements para completar o conjunto básico de ferramentas de teste, e para eventual necessidade futura.
 Os nomes dos testes tem um prefixo padrão test_... indicando que é um teste.
 
-## EXECUTANDO O PYTEST
+## Executando o Pytest
 Para rodar o pytest, pode-se seguir os seguintes passos:
 Na pasta raíz do projeto, onde está src:
 
@@ -214,7 +214,7 @@ No código acima, o parâmetro `-vv` (ou `--verbose --verbose`) após o comando 
 
 Neste projeto, focamos sempre no usdo de pytest -vv para obter uma saída melhor detalhada dos testes.
 
-## RELATÓRIOS DE COBERTURA DE TESTES
+## Cobertura de testes
 
 ```powershell
 $env:PYTHONPATH="diario-de-bordo/src"; coverage run -m pytest diario-de-bordo/src/tests
@@ -241,7 +241,7 @@ diario-de-bordo\src\tests\utils\moc_data.py                                     
 TOTAL                                                                          79      9    89%
 ```
 
-## ENCODING DO CSV
+## Encoding do CSV
 Foi necessário realizar a verificação do encoding do .csv para correto carregamento no spark.
 Ao utilizar um encoding diferente do correto, ocorre erros com caracteres estranhos, como: "ReuniÃ£o" em vez de "Reunião".
 
@@ -252,6 +252,6 @@ Get-Content -Path .\data\raw\info_transportes.csv -Encoding Byte -TotalCount 4 |
 Resultado do comando: 00000000   EF BB BF 44   ï»¿D
 significa que arquivo info_transportes.csv está codificado em UTF-8 com BOM (Byte Order Mark).
 
-## SPARKSESSION
+## SparkSession
 Ao longo do desenvolvimento, foi feito múltiplas SparkSession em diferentes lugares, o que poderia causar inconsistências e desperdício de recursos, por isso, foi centralizado as configurações do spark no arquivo spark.yml, que usamos para criar a SparkSession apenas uma vez (no hook do Kedro ) e reutilizar essa sessão ao longo das execuções.
 Assim, nos nodes acessamos a SparkSession já criada via context.spark (injeção de contexto)  e em em scripts externos, cria-se uma função utilitária para obter a SparkSession com as configurações corretas.
