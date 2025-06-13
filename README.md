@@ -193,63 +193,6 @@ Onde:
 No estado atual do projeto, não utilizamos o `pytest-ordering` pois não há necessidade de executar testes em sequência específica, mas mantemos nos requirements para completar o conjunto básico de ferramentas de teste, e para eventual necessidade futura.
 Os nomes dos testes tem um prefixo padrão test_... indicando que é um teste.
 
-## RELATÓRIOS DE COBERTURA DE TESTES
-- Percentual de código testado
-- Linhas executadas e não executadas
-
-### 2. Gerando Relatórios
-
-#### 2.1 Relatório no Terminal
-Execute na raiz do projeto (onde está a pasta `src/`):
-
-```powershell
-pytest --cov=src --cov-report=term-missing
-```
-
-**Saída gerada do projeto:**
-```
----------- coverage: platform win32, python 3.11.9-final-0 -----------
-Name                                                        Stmts   Miss  Cover   Missing
------------------------------------------------------------------------------------------
-src\diario_de_bordo\__init__.py                                 1      0   100%
-src\diario_de_bordo\__main__.py                                14     14     0%   4-23
-src\diario_de_bordo\hooks.py                                   11     11     0%   1-24
-src\diario_de_bordo\pipeline_registry.py                        6      6     0%   5-17
-src\diario_de_bordo\pipelines\__init__.py                       0      0   100%
-src\diario_de_bordo\pipelines\data_processing\__init__.py       1      0   100%
-src\diario_de_bordo\pipelines\data_processing\nodes.py         14      0   100%
-src\diario_de_bordo\pipelines\data_processing\pipeline.py       4      1    75%   9
-src\diario_de_bordo\settings.py                                10     10     0%   31-55
-src\tests\test_nodes.py                                        15      0   100%
-src\tests\test_run.py                                          15      5    67%   18-27
------------------------------------------------------------------------------------------
-TOTAL                                                          91     47    48%
-```
-
-Como mostra a imagem acima, o projeto está com Cover acima de 48%. Os arquivos de configuração do kedro ( hooks.py, settings.py, pipeline_registry.py  ) normalmente não possuem testes unitários.
-
-#### 2.2 Relatório HTML (visual)
-Para uma análise detalhada ( irá criar uma pasta htmlcov/ e podemos abrir o arquivo htmlcov/index.html para analise ).
-
-```bash
-pytest --cov=src --cov-report=html
-```
-- Código colorido (verde=testado, vermelho=não testado)
-- Gráficos de cobertura por módulo
-
-Neste projeto, preferimos executar o pytest como no item 2.1 Relatório no Terminal onde mostra a cobertura obtida.
-
-### 4. Configuração Avançada
-Adicione no `pyproject.toml` ou `setup.cfg`:
-```ini
-[tool.pytest.ini_options]
-addopts = --cov=src --cov-report=term-missing
-```
-
-### 5. Limpeza dos relatórios gerados
-```bash
-rm -rf .coverage htmlcov/
-```
 ## EXECUTANDO O PYTEST
 Para rodar o pytest, pode-se seguir os seguintes passos:
 
@@ -273,6 +216,33 @@ No código acima, o parâmetro `-vv` (ou `--verbose --verbose`) após o comando 
 
 Neste projeto, focamos sempre no usdo de pytest -vv para obter uma saída melhor detalhada dos testes.
 
+## RELATÓRIOS DE COBERTURA DE TESTES
+
+```powershell
+$env:PYTHONPATH="diario-de-bordo/src"; coverage run -m pytest diario-de-bordo/src/tests
+```
+
+```powershell
+coverage report --show-missing
+```
+
+**Saída gerada do projeto:**
+```
+Name                                                                        Stmts   Miss  Cover   Missing
+---------------------------------------------------------------------------------------------------------
+diario-de-bordo\src\diario_de_bordo\__init__.py                                 1      0   100%
+diario-de-bordo\src\diario_de_bordo\pipelines\__init__.py                       0      0   100%
+diario-de-bordo\src\diario_de_bordo\pipelines\data_processing\__init__.py       1      0   100%
+diario-de-bordo\src\diario_de_bordo\pipelines\data_processing\nodes.py         19      8    58%   65-74
+diario-de-bordo\src\diario_de_bordo\pipelines\data_processing\pipeline.py       4      1    75%   10
+diario-de-bordo\src\tests\common_tests\test_column_type_by_prefix.py           19      0   100%
+diario-de-bordo\src\tests\common_tests\test_no_fully_null_columns.py           14      0   100%
+diario-de-bordo\src\tests\test_nodes\test_run.py                               14      0   100%
+diario-de-bordo\src\tests\utils\moc_data.py                                     7      0   100%
+---------------------------------------------------------------------------------------------------------
+TOTAL                                                                          79      9    89%
+```
+
 ## ENCODING DO CSV
 Foi necessário realizar a verificação do encoding do .csv para correto carregamento no spark.
 Ao utilizar um encoding diferente do correto, ocorre erros com caracteres estranhos, como: "ReuniÃ£o" em vez de "Reunião".
@@ -284,8 +254,8 @@ Get-Content -Path .\data\raw\info_transportes.csv -Encoding Byte -TotalCount 4 |
 Resultado do comando: 00000000   EF BB BF 44   ï»¿D
 significa que arquivo info_transportes.csv está codificado em UTF-8 com BOM (Byte Order Mark).
 
-## TESTE DE OVERWRITE
-
 ## SPARKSESSION
 Ao longo do desenvolvimento, foi feito múltiplas SparkSession em diferentes lugares, o que poderia causar inconsistências e desperdício de recursos, por isso, foi centralizado as configurações do spark no arquivo spark.yml, que usamos para criar a SparkSession apenas uma vez (no hook do Kedro ) e reutilizar essa sessão ao longo das execuções.
 Assim, nos nodes acessamos a SparkSession já criada via context.spark (injeção de contexto)  e em em scripts externos, cria-se uma função utilitária para obter a SparkSession com as configurações corretas.
+
+## TESTE DE OVERWRITE
