@@ -7,42 +7,42 @@ Projeto de pipeline de dados utilizando Kedro e PySpark para carregar, processar
 ```
 diario-de-bordo/
 ├── conf/
+│   ├── README.md
 │   ├── base/
 │   │   ├── catalog.yml
 │   │   ├── parameters.yml
-│   │   ├── spark.yml
-│   │   └── ...
-│   ├── local/
-│   │   └── credentials.yml
-│   └── README.md
+│   │   └── spark.yml
+│   └── local/
+│       └── credentials.yml
 ├── data/
-│   ├── raw/
-│   │   └── info_transportes.csv
-│   └── processed/
-├── diario-de-bordo/
-│   └── data/
+│   ├── processed/
+│   │   └── .gitkeep
+│   └── raw/
+│       └── info_transportes.csv
 ├── src/
-│   ├── diario_de_bordo/
-│   │   ├── __init__.py
-│   │   ├── __main__.py
-│   │   ├── hooks.py
-│   │   ├── pipeline_registry.py
-│   │   ├── settings.py
-│   │   └── pipelines/
-│   │       └── data_processing/
-│   │           ├── __init__.py
-│   │           ├── nodes.py
-│   │           └── pipeline.py
-│   └── tests/
-│       ├── common_tests/
-│       ├── test_nodes/
-│       └── utils/
-│           └── moc_data.py
-├── requirements.txt
+│   └── diario_de_bordo/
+│       ├── __init__.py
+│       ├── __main__.py
+│       ├── hooks.py
+│       ├── pipeline_registry.py
+│       ├── settings.py
+│       └── pipelines/
+│           ├── __init__.py
+│           └── data_processing/
+│               ├── nodes.py
+│               └── pipeline.py
+│       └── tests/
+│           ├── common_tests/
+│           │   ├── test_column_type_by_prefix.py
+│           │   └── test_no_fully_null_columns.py
+│           ├── test_nodes/
+│           │   └── test_run.py
+│           └── utils/
 ├── pyproject.toml
 ├── pytest.ini
 ├── README.md
-└── Dockerfile
+├── requirements.txt
+└── test_requirements.txt
 ```
 
 ---
