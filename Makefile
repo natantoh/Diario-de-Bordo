@@ -14,7 +14,7 @@ run:
 docker-build:
 	docker build -t diario-de-bordo .
 
-# Roda via docker
+# Roda via docker ( No Maker não interpreta o PWD, por isso precisa copiar e colar no terminal)
 docker-run:
 	docker run --rm -v ${PWD}/diario-de-bordo/data:/app/diario-de-bordo/data diario-de-bordo
 
