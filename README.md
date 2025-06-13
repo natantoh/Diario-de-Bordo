@@ -1,48 +1,48 @@
 # Diario-de-Bordo
+# Pipeline de carregamento e processamento com PySpark e Kedro
+## Strutura do Projeto
 
-# Strutura do Projeto
-
-O projeto foi feito conforme a arquitetura abaixo, foi utilizado o template do kedro 0.19.12.
+Projeto de pipeline de dados utilizando Kedro e PySpark para carregar, processar e gerar tabelas agregadas a partir de origens .csv, com foco em organização, modularidade, testes. O projeto foi feito utilizando o kedro 0.19.12 como framework base. 
 
 ```
 diario-de-bordo/
 ├── conf/
+│   ├── README.md
 │   ├── base/
 │   │   ├── catalog.yml
 │   │   ├── parameters.yml
-│   │   ├── spark.yml
-│   │   └── ...
-│   ├── local/
-│   │   └── credentials.yml
-│   └── README.md
+│   │   └── spark.yml
+│   └── local/
+│       └── credentials.yml
 ├── data/
-│   ├── raw/
-│   │   └── info_transportes.csv
-│   └── processed/
-├── diario-de-bordo/
-│   └── data/
+│   ├── processed/
+│   │   └── .gitkeep
+│   └── raw/
+│       └── info_transportes.csv
 ├── src/
-│   ├── diario_de_bordo/
-│   │   ├── __init__.py
-│   │   ├── __main__.py
-│   │   ├── hooks.py
-│   │   ├── pipeline_registry.py
-│   │   ├── settings.py
-│   │   └── pipelines/
-│   │       └── data_processing/
-│   │           ├── __init__.py
-│   │           ├── nodes.py
-│   │           └── pipeline.py
-│   └── tests/
-│       ├── common_tests/
-│       ├── test_nodes/
-│       └── utils/
-│           └── moc_data.py
-├── requirements.txt
+│   └── diario_de_bordo/
+│       ├── __init__.py
+│       ├── __main__.py
+│       ├── hooks.py
+│       ├── pipeline_registry.py
+│       ├── settings.py
+│       └── pipelines/
+│           ├── __init__.py
+│           └── data_processing/
+│               ├── nodes.py
+│               └── pipeline.py
+│       └── tests/
+│           ├── common_tests/
+│           │   ├── test_column_type_by_prefix.py
+│           │   └── test_no_fully_null_columns.py
+│           ├── test_nodes/
+│           │   └── test_run.py
+│           └── utils/
 ├── pyproject.toml
 ├── pytest.ini
 ├── README.md
-└── Dockerfile
+├── requirements.txt
+└── test_requirements.txt
 ```
 
 ---
@@ -54,7 +54,7 @@ docker build -t diario-de-bordo .
 ```
 
 ## Execução com Docker
-Necessário ter o docker instalado para build e run da imagem.
+Necessário ter o docker instalado para build e run da imagem. No meu caso, instalei o docker desktop no windows, onde pode-se acompanhar containers e imagens.
 Após instalação do docker, executa-se o seguinte comando, o comando deve ser executado na mesma pasta que está o DockerFile:
 
 ---
@@ -68,9 +68,9 @@ docker run --rm -v "$(pwd)/diario-de-bordo/data:/app/diario-de-bordo/data" diari
 ```
 ---
 
-O projeto está salvando a tabela no caminho diario-de-bordo/data/processed, que fica dentro do próprio projeto, por isso, ao terminar de rodar via docker, perde-se os dados salvos. Para rodar o docker e continuar com o dado, podemos usar os comandos acima. Por isso o comando docker run foi customizado para que o output fique persistido.
+O projeto está salvando a tabela no caminho _diario-de-bordo/data/processed_, que fica dentro do próprio projeto, o comando docker foi customizado para que o output fique persistido no próprio projeto.
 
-Ao usar o parâmetro `-v` no `docker run`, você **mapeia a pasta de dados do container para o seu host**, garantindo que tudo que for salvo em processed dentro do container ficará disponível (e persistente) na sua máquina, mesmo após o container ser removido.
+Ao usar o parâmetro `-v` no `docker run`, mapeamos a pasta de dados do container para o projeto, garantindo que tudo que for salvo em processed dentro do container fica disponível no local indicado do projeto.
 
 Ao executar o comando docker acima, ocorre o seguinte:
 - O Kedro salva a tabela Delta em `/app/diario-de-bordo/data/processed` (dentro do container).
@@ -78,8 +78,7 @@ Ao executar o comando docker acima, ocorre o seguinte:
 - Podemos abrir, ler, copiar ou versionar a tabela Delta normalmente após o pipeline rodar.
 
 ## Execução sem Docker - Configuração manual no Windows
-
-Nesta sessão, será apresentado o passo a passo para rodar sem Docker, documentando os passos feitos para rodar manualmente no Windows:
+Nesta sessão, será apresentado o passo a passo para rodar sem Docker, foi documentando os passos feitos para rodar manualmente no Windows. A imagem docker deste projeto foi construida com base na documentação feita abaixo, onde foi mapeando tudo que era necessário para rodar o spark, foi anotado todos os passos feitos para posteriormente construir a imagem docker da mesma maneira que foi configurado localmente.
 
 ### Pré-requisitos:
 - [x] Download do Spark 3.4.4 com Scala 2.12: [Apache Spark Downloads](https://spark.apache.org/downloads.html)
@@ -272,8 +271,7 @@ No código acima, o parâmetro `-vv` (ou `--verbose --verbose`) após o comando 
 - `pytest -v` mostra o nome de cada teste.
 - `pytest -vv` mostra ainda mais detalhes, como parâmetros de testes parametrizados, docstrings dos testes, e mensagens de assert.
 
-Por isso foi usado pytest -vv para obter uma saída melhor detalhada dos testes.
-
+Neste projeto, focamos sempre no usdo de pytest -vv para obter uma saída melhor detalhada dos testes.
 
 ## ENCODING DO CSV
 Foi necessário realizar a verificação do encoding do .csv para correto carregamento no spark.

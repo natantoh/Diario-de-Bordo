@@ -8,8 +8,3 @@ setuptools; python_version >= "3.12"
 delta-spark==2.4.0
 kedro==0.19.12
 pyspark==3.4.4
-
-# requirements for testing
-pytest==7.4.4
-pytest-cov==4.1.0
-pytest-ordering==0.6

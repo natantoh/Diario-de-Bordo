@@ -193,5 +193,5 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
-# Não subir as tabelas
-diario-de-bordo/data/processed/
+# Pasta gerada pelo Kedro, pode armezenar arquivos temporários entre outros arquivos relacionados a execução do kedro.
+diario-de-bordo/.viz/
