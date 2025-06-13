@@ -1,5 +1,5 @@
 # Diario-de-Bordo
-# Diario de Bordo - Pipeline de carregamento e processamento com PySpark e Kedro
+# Pipeline de carregamento e processamento com PySpark e Kedro
 ## Strutura do Projeto
 
 Projeto de pipeline de dados utilizando Kedro e PySpark para carregar, processar e gerar tabelas agregadas a partir de origens .csv, com foco em organização, modularidade, testes. O projeto foi feito utilizando o kedro 0.19.12 como framework base. 
