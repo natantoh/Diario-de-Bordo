@@ -271,8 +271,7 @@ No código acima, o parâmetro `-vv` (ou `--verbose --verbose`) após o comando 
 - `pytest -v` mostra o nome de cada teste.
 - `pytest -vv` mostra ainda mais detalhes, como parâmetros de testes parametrizados, docstrings dos testes, e mensagens de assert.
 
-Por isso foi usado pytest -vv para obter uma saída melhor detalhada dos testes.
-
+Neste projeto, focamos sempre no usdo de pytest -vv para obter uma saída melhor detalhada dos testes.
 
 ## ENCODING DO CSV
 Foi necessário realizar a verificação do encoding do .csv para correto carregamento no spark.
